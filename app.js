@@ -13,11 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initAccessibilityFeatures();
     initPaymentPlatformEffects();
     initKeyboardNavigation();
-    
-    // Show welcome notification with ParentPay branding
-    setTimeout(() => {
-        showParentPayNotification('Resume loaded successfully! Ready for ParentPay application 💙', 'success');
-    }, 1000);
 });
 
 /**
@@ -77,7 +72,6 @@ function initContactInteractions() {
             card.style.cursor = 'pointer';
             card.addEventListener('click', function() {
                 window.location.href = `mailto:${contactValue}`;
-                showParentPayNotification('Opening email client...', 'info');
                 addPaymentProcessingEffect(this);
             });
             
@@ -94,7 +88,6 @@ function initContactInteractions() {
             card.style.cursor = 'pointer';
             card.addEventListener('click', function() {
                 window.location.href = `tel:${contactValue}`;
-                showParentPayNotification('Opening phone dialer...', 'success');
                 addPaymentProcessingEffect(this);
             });
             
@@ -111,7 +104,6 @@ function initContactInteractions() {
             card.style.cursor = 'pointer';
             card.addEventListener('click', function() {
                 window.open('https://linkedin.com/in/manish-ghorpade-2902a5150/', '_blank');
-                showParentPayNotification('LinkedIn profile opened in new tab', 'info');
                 addPaymentProcessingEffect(this);
             });
             
@@ -295,7 +287,6 @@ function initSkillInteractions() {
             this.style.transform = 'translateY(-3px) scale(1.08)';
             this.style.boxShadow = '0 12px 25px rgba(0, 174, 239, 0.5)';
             
-            showParentPayNotification(`${this.textContent} skill highlighted - relevant for ParentPay's tech stack!`, 'success');
             
             // Clear selection after delay
             setTimeout(() => {
@@ -441,7 +432,6 @@ function initProjectInteractions() {
         // Click interaction for project focus
         widget.addEventListener('click', function() {
             const projectTitle = this.querySelector('.project-title').textContent;
-            showParentPayNotification(`${projectTitle} - Perfect alignment with ParentPay's technical requirements!`, 'info');
             
             // Add temporary highlight
             this.style.borderColor = '#00AEEF';
@@ -503,15 +493,12 @@ function initPrintFunctionality() {
         this.style.background = 'linear-gradient(135deg, #28A745 0%, #20A039 100%)';
         this.innerHTML = '✓ Preparing ParentPay Resume...';
         
-        showParentPayNotification('Optimizing resume for ParentPay application printing...', 'info');
         optimizeForParentPayPrint();
         
         setTimeout(() => {
             try {
                 window.print();
-                showParentPayNotification('Print dialog opened! Perfect for ParentPay submission 📄', 'success');
             } catch (error) {
-                showParentPayNotification('Please use Ctrl+P to print your ParentPay resume', 'warning');
             }
             
             // Reset button
@@ -587,7 +574,6 @@ function initPaymentPlatformEffects() {
         // Add payment processing-style click effect
         card.addEventListener('click', function() {
             const title = this.querySelector('.alignment-title').textContent;
-            showParentPayNotification(`${title} - Key strength for ParentPay's mission! 💙`, 'success');
             
             // Add temporary glow effect
             this.style.boxShadow = '0 0 30px rgba(0, 174, 239, 0.4), inset 0 0 20px rgba(0, 174, 239, 0.1)';
@@ -635,7 +621,6 @@ function initAccessibilityFeatures() {
     // High contrast mode support
     if (window.matchMedia('(prefers-contrast: high)').matches) {
         document.body.classList.add('high-contrast-mode');
-        showParentPayNotification('High contrast mode detected - optimized for accessibility', 'info');
     }
     
     // Reduced motion support
@@ -707,92 +692,8 @@ function navigateParentPaySections(direction) {
             });
             
             const sectionTitle = sections[targetIndex].querySelector('.section-title').textContent;
-            showParentPayNotification(`Navigated to: ${sectionTitle}`, 'info');
         }
     }
-}
-
-/**
- * ParentPay-branded notification system
- */
-function showParentPayNotification(message, type = 'info', duration = 4000) {
-    const notification = document.createElement('div');
-    
-    const colors = {
-        info: '#00AEEF',
-        success: '#28A745',
-        warning: '#FFC107',
-        error: '#DC3545'
-    };
-    
-    const icons = {
-        info: '💙',
-        success: '✅',
-        warning: '⚠️',
-        error: '❌'
-    };
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 30px;
-        right: 30px;
-        background: ${colors[type]};
-        color: white;
-        padding: 16px 24px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 500;
-        z-index: 10000;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        opacity: 0;
-        transform: translateX(100px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        max-width: 400px;
-        word-wrap: break-word;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        font-family: "Poppins", sans-serif;
-    `;
-    
-    notification.innerHTML = `${icons[type]} ${message}`;
-    document.body.appendChild(notification);
-    
-    // Stack notifications
-    const existingNotifications = document.querySelectorAll('[style*="position: fixed"][style*="top: 30px"]');
-    if (existingNotifications.length > 1) {
-        notification.style.top = `${30 + (existingNotifications.length - 1) * 80}px`;
-    }
-    
-    // Animate in
-    setTimeout(() => {
-        notification.style.opacity = '1';
-        notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Auto dismiss
-    setTimeout(() => {
-        notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100px)';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
-        }, 400);
-    }, duration);
-    
-    // Click to dismiss
-    notification.addEventListener('click', function() {
-        this.style.opacity = '0';
-        this.style.transform = 'translateX(100px)';
-        setTimeout(() => {
-            if (this.parentNode) {
-                this.remove();
-            }
-        }, 400);
-    });
 }
 
 /**
@@ -811,7 +712,6 @@ function dismissAllNotifications() {
  * Export ParentPay Resume functionality
  */
 window.ParentPayResumeApp = {
-    showNotification: showParentPayNotification,
     navigateSections: navigateParentPaySections,
     optimizePrint: optimizeForParentPayPrint,
     dismissNotifications: dismissAllNotifications
@@ -826,7 +726,6 @@ function initParentPayTheme() {
     function handleThemeChange(e) {
         if (e.matches) {
             document.body.classList.add('parentpay-dark-mode');
-            showParentPayNotification('Dark mode optimized for ParentPay branding', 'info', 2000);
         } else {
             document.body.classList.remove('parentpay-dark-mode');
         }
